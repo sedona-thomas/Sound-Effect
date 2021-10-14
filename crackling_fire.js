@@ -1,6 +1,6 @@
 /*
  * Sedona Thomas snt2127
- * boing.js:
+ * crackling_fire.js:
  */
 
 var audioCtx;
@@ -11,10 +11,7 @@ playButton.addEventListener('click', play, false);
 function play(event) {
     if (!audioCtx) {
         audioCtx = initAudio();
-        biquad = initBiquad();
-        let whiteNoise = makeWhiteNoise();
-        whiteNoise.connect(biquad).connect(audioCtx.destination);
-        initLfo();
+        cracklingFire();
         return;
     }
     else if (audioCtx.state === 'suspended') {
@@ -27,6 +24,13 @@ function play(event) {
 
 function initAudio() {
     return new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function cracklingFire() {
+    biquad = initBiquad();
+    let whiteNoise = makeWhiteNoise();
+    whiteNoise.connect(biquad).connect(audioCtx.destination);
+    initLfo();
 }
 
 function initLfo() {
