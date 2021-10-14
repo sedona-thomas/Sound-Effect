@@ -11,7 +11,8 @@ playButton.addEventListener('click', play, false);
 function play(event) {
     if (!audioCtx) {
         audioCtx = initAudio();
-        cracklingFire();
+        //testing();
+        makeDialTone();
         return;
     }
     else if (audioCtx.state === 'suspended') {
@@ -22,9 +23,72 @@ function play(event) {
     }
 }
 
+function testing() {
+    lowpass = initLowpass(300);
+    sound = initSound();
+    sound.connect(lowpass).connect(audioCtx.destination);
+}
+
+
 function initAudio() {
     return new (window.AudioContext || window.webkitAudioContext)();
 }
+
+function initLowpass(freq) {
+    lowpassFilter = audioCtx.createBiquadFilter();
+    lowpassFilter.type = "bandpass";
+    lowpassFilter.Q.value = 100;
+    lowpassFilter.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+    return lowpassFilter;
+}
+
+function initSound() {
+    const osc = audioCtx.createOscillator();
+    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc.type = "sine";
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    osc.connect(gainNode).connect(audioCtx.destination);
+    osc.start();
+
+    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
+    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
+
+    let lfo = audioCtx.createOscillator();
+    lfo.frequency.value = 100;
+    let lfoGain = audioCtx.createGain();
+    lfoGain.gain.value = 10;
+    lfo.connect(lfoGain).connect(osc.frequency);
+    lfo.start();
+    return osc;
+}
+
+
+function makeDialTone() {
+    const osc1 = audioCtx.createOscillator();
+    osc1.frequency.setValueAtTime(350, audioCtx.currentTime);
+    osc1.type = "sine";
+    const gainNode1 = audioCtx.createGain();
+    gainNode1.gain.setValueAtTime(0, audioCtx.currentTime);
+    osc1.connect(gainNode1).connect(audioCtx.destination);
+    osc1.start();
+
+    const osc2 = audioCtx.createOscillator();
+    osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc2.type = "sine";
+    const gainNode2 = audioCtx.createGain();
+    gainNode2.gain.setValueAtTime(0, audioCtx.currentTime);
+    osc2.connect(gainNode2).connect(audioCtx.destination);
+    osc2.start();
+}
+
+
+
+
+
+
+/*
 
 function cracklingFire() {
     biquad = initBiquad();
@@ -45,7 +109,7 @@ function initLfo() {
 function initBiquad() {
     biquadFilter = audioCtx.createBiquadFilter();
     biquadFilter.type = "lowpass";
-    biquadFilter.frequency.setValueAtTime(500, audioCtx.currentTime);
+    biquadFilter.frequency.setValueAtTime(300, audioCtx.currentTime);
     biquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
     return biquadFilter;
 }
@@ -63,7 +127,7 @@ function makeWhiteNoise() {
     whiteNoise.start(0);
     return whiteNoise;
 }
-
+*/
 
 
 
