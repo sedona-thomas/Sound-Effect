@@ -4,15 +4,17 @@
  */
 
 var audioCtx;
-var activeOscillators = {}
-var activeGainNodes = {}
+var biquad;
 
 const playButton = document.getElementById("play");
 playButton.addEventListener('click', play, false);
 function play(event) {
     if (!audioCtx) {
-        initAudio();
-        playSoundEffect();
+        audioCtx = initAudio();
+        biquad = initBiquad();
+        let whiteNoise = makeWhiteNoise();
+        whiteNoise.connect(biquad).connect(audioCtx.destination);
+        initLfo();
         return;
     }
     else if (audioCtx.state === 'suspended') {
@@ -24,9 +26,44 @@ function play(event) {
 }
 
 function initAudio() {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+    return new (window.AudioContext || window.webkitAudioContext)();
 }
 
+function initLfo() {
+    var lfo1 = audioCtx.createOscillator();
+    modulationIndex = audioCtx.createGain();
+    modulationIndex.gain.value = 200;
+    lfo1.frequency.value = 100;
+    lfo1.connect(modulationIndex).connect(biquad.frequency);
+    lfo1.start()
+}
+
+function initBiquad() {
+    biquadFilter = audioCtx.createBiquadFilter();
+    biquadFilter.type = "lowpass";
+    biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+    biquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+    return biquadFilter;
+}
+
+function makeWhiteNoise() {
+    var bufferSize = 10 * audioCtx.sampleRate;
+    var noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    var output = noiseBuffer.getChannelData(0);
+    for (var i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+    }
+    whiteNoise = audioCtx.createBufferSource();
+    whiteNoise.buffer = noiseBuffer;
+    whiteNoise.loop = true;
+    whiteNoise.start(0);
+    return whiteNoise;
+}
+
+
+
+
+/*
 function playSoundEffect() {
 
     key = "temp";
@@ -61,3 +98,4 @@ function playSoundEffect() {
         activeGainNodes[gainNodeKey][0].gain.setTargetAtTime(0.4 / gainNodes, audioCtx.currentTime, 0.1);
     });
 }
+*/
