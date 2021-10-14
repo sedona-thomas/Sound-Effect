@@ -12,7 +12,8 @@ function play(event) {
     if (!audioCtx) {
         audioCtx = initAudio();
         //testing();
-        makeDialTone();
+        //makeDialTone();
+        makeTibetanSingingBowl();
         return;
     }
     else if (audioCtx.state === 'suspended') {
@@ -29,14 +30,13 @@ function testing() {
     sound.connect(lowpass).connect(audioCtx.destination);
 }
 
-
 function initAudio() {
     return new (window.AudioContext || window.webkitAudioContext)();
 }
 
 function initLowpass(freq) {
     lowpassFilter = audioCtx.createBiquadFilter();
-    lowpassFilter.type = "bandpass";
+    lowpassFilter.type = "lowpass";
     lowpassFilter.Q.value = 100;
     lowpassFilter.frequency.setValueAtTime(freq, audioCtx.currentTime);
     lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
@@ -45,7 +45,7 @@ function initLowpass(freq) {
 
 function initSound() {
     const osc = audioCtx.createOscillator();
-    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(700, audioCtx.currentTime);
     osc.type = "sine";
     const gainNode = audioCtx.createGain();
     gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
@@ -56,15 +56,42 @@ function initSound() {
     gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
 
     let lfo = audioCtx.createOscillator();
-    lfo.frequency.value = 100;
+    lfo.frequency.value = 20;
     let lfoGain = audioCtx.createGain();
     lfoGain.gain.value = 10;
     lfo.connect(lfoGain).connect(osc.frequency);
     lfo.start();
+
     return osc;
 }
 
+// makeTibetanSingingBowl(): plays the sound of a Tibetan singing bowl
+// I was playing around with the lowpass filter and lfo and accidentally made the sound of the meditation bowls
+function makeTibetanSingingBowl() {
+    const osc = audioCtx.createOscillator();
+    osc.frequency.setValueAtTime(650, audioCtx.currentTime);
+    osc.type = "sine";
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    osc.connect(gainNode).connect(audioCtx.destination);
+    osc.start();
 
+    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
+    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
+
+    let lfo = audioCtx.createOscillator();
+    lfo.frequency.value = 20;
+    let lfoGain = audioCtx.createGain();
+    lfoGain.gain.value = 10;
+    lfo.connect(lfoGain).connect(osc.frequency);
+    lfo.start();
+
+    lowpass = initLowpass(300);
+    osc.connect(lowpass).connect(audioCtx.destination);
+}
+
+// makeDialTone(): plays the dial tone sound
+// I first started with a dial tone to practice making the sound work
 function makeDialTone() {
     const osc1 = audioCtx.createOscillator();
     osc1.frequency.setValueAtTime(350, audioCtx.currentTime);
@@ -74,6 +101,9 @@ function makeDialTone() {
     osc1.connect(gainNode1).connect(audioCtx.destination);
     osc1.start();
 
+    gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
+    gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
+
     const osc2 = audioCtx.createOscillator();
     osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
     osc2.type = "sine";
@@ -81,6 +111,9 @@ function makeDialTone() {
     gainNode2.gain.setValueAtTime(0, audioCtx.currentTime);
     osc2.connect(gainNode2).connect(audioCtx.destination);
     osc2.start();
+
+    gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
+    gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
 }
 
 
