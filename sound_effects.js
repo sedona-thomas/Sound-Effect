@@ -68,26 +68,26 @@ function initSound() {
 // makeTibetanSingingBowl(): plays the sound of a Tibetan singing bowl
 // I was playing around with the lowpass filter and lfo and accidentally made the sound of the meditation bowls
 function makeTibetanSingingBowl() {
-    const osc = audioCtx.createOscillator();
-    osc.frequency.setValueAtTime(650, audioCtx.currentTime);
-    osc.type = "sine";
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc.connect(gainNode).connect(audioCtx.destination);
-    osc.start();
+    const osc1 = audioCtx.createOscillator();
+    osc1.frequency.setValueAtTime(650, audioCtx.currentTime);
+    osc1.type = "sine";
+    const gainNode1 = audioCtx.createGain();
+    gainNode1.gain.setValueAtTime(0, audioCtx.currentTime);
+    osc1.connect(gainNode1).connect(audioCtx.destination);
+    osc1.start();
 
-    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
-    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
+    gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
+    gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
 
     let lfo = audioCtx.createOscillator();
-    lfo.frequency.value = 20;
+    lfo.frequency.value = 30;
     let lfoGain = audioCtx.createGain();
     lfoGain.gain.value = 10;
-    lfo.connect(lfoGain).connect(osc.frequency);
+    lfo.connect(lfoGain).connect(osc1.frequency);
     lfo.start();
 
     lowpass = initLowpass(300);
-    osc.connect(lowpass).connect(audioCtx.destination);
+    osc1.connect(lowpass).connect(audioCtx.destination);
 }
 
 // makeDialTone(): plays the dial tone sound
