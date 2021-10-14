@@ -45,7 +45,7 @@ function initLfo() {
 function initBiquad() {
     biquadFilter = audioCtx.createBiquadFilter();
     biquadFilter.type = "lowpass";
-    biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+    biquadFilter.frequency.setValueAtTime(500, audioCtx.currentTime);
     biquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
     return biquadFilter;
 }
