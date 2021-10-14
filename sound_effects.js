@@ -1,6 +1,6 @@
 /*
  * Sedona Thomas snt2127
- * crackling_fire.js:
+ * sound_effects.js:
  */
 
 var audioCtx;
