@@ -110,29 +110,74 @@ function makeRingingTone() {
     osc2.start();
 
     gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-    gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
     gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+
+    gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
     gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
 
     while (true) {
-        osc1.stop(audioCtx.currentTime + 2);
-        osc2.stop(audioCtx.currentTime + 2);
-
-        //osc1.start();
-        //osc2.start();
 
         gainNode1.gain.setTargetAtTime(0.01, audioCtx.currentTime, 0.1);
         gainNode2.gain.setTargetAtTime(0.01, audioCtx.currentTime, 0.1);
 
-        osc1.stop(audioCtx.currentTime + 4);
-        osc2.stop(audioCtx.currentTime + 4);
+        gainNode1.gain.setTargetAtTime(0.01, audioCtx.currentTime, 2 - 0.1);
+        gainNode2.gain.setTargetAtTime(0.01, audioCtx.currentTime, 2 - 0.1);
 
         gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-        gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
         gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+
+        gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
         gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+
+        gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 4 - (2 * 0.1));
+        gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 4 - (2 * 0.1));
     }
 }
+
+/*
+// makeRingingTone(): plays the ringing tone sound
+function makeRingingTone() {
+    const osc1 = audioCtx.createOscillator();
+    osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc1.type = "sine";
+    const gainNode1 = audioCtx.createGain();
+    gainNode1.gain.setValueAtTime(0, audioCtx.currentTime);
+    osc1.connect(gainNode1).connect(audioCtx.destination);
+    osc1.start();
+
+    const osc2 = audioCtx.createOscillator();
+    osc2.frequency.setValueAtTime(480, audioCtx.currentTime);
+    osc2.type = "sine";
+    const gainNode2 = audioCtx.createGain();
+    gainNode2.gain.setValueAtTime(0, audioCtx.currentTime);
+    osc2.connect(gainNode2).connect(audioCtx.destination);
+    osc2.start();
+
+    gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+    gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+
+    gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+    gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+
+    while (true) {
+
+        gainNode1.gain.setTargetAtTime(0.01, audioCtx.currentTime, 0.1);
+        gainNode2.gain.setTargetAtTime(0.01, audioCtx.currentTime, 0.1);
+
+        gainNode1.gain.setTargetAtTime(0.01, audioCtx.currentTime, 2 - 0.1);
+        gainNode2.gain.setTargetAtTime(0.01, audioCtx.currentTime, 2 - 0.1);
+
+        gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+        gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+
+        gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+        gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+
+        gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 4 - (2 * 0.1));
+        gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 4 - (2 * 0.1));
+    }
+}
+*/
 
 // makeDialTone(): plays the dial tone sound
 // I first started with a dial tone to practice making the sound work
