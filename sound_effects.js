@@ -91,8 +91,10 @@ function makeTibetanSingingBowl() {
     osc1.connect(lowpass).connect(audioCtx.destination);
 }
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 // makeRingingTone(): plays the ringing tone sound
-function makeRingingTone() {
+async function makeRingingTone() {
     const osc1 = audioCtx.createOscillator();
     osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
     osc1.type = "sine";
@@ -115,24 +117,21 @@ function makeRingingTone() {
     gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
     gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
 
+    startTime = audioCtx.currentTime;
+
+    // how to loop audio: https://mdn.github.io/webaudio-examples/decode-audio-data/
+
+    gainNode1.loop = true;
+
+    /*
     while (true) {
-
-        gainNode1.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
-        gainNode2.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
-
-        gainNode1.gain.setTargetAtTime(0, audioCtx.currentTime, 2 - 0.1);
-        gainNode2.gain.setTargetAtTime(0, audioCtx.currentTime, 2 - 0.1);
-
-        gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-        gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-
-        gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
-        gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
-
-        gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 4 - (2 * 0.1));
-        gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 4 - (2 * 0.1));
-    }
+        await delay(2 * 1000);
+        audioCtx.suspend();
+        await delay(4 * 1000);
+        audioCtx.resume();
+    }*/
 }
+
 
 /*
 // makeRingingTone(): plays the ringing tone sound
