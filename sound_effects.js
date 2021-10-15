@@ -1,19 +1,79 @@
 /*
  * Sedona Thomas snt2127
- * sound_effects.js:
+ * sound_effects.js: various sound effects
  */
 
 var audioCtx;
-var biquad;
 
 const playButton = document.getElementById("play");
 playButton.addEventListener('click', play, false);
+
+const dialButton1 = document.getElementById("key1");
+dialButton1.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton1.value);
+}, false);
+
+const dialButton2 = document.getElementById("key2");
+dialButton2.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton2.value);
+}, false);
+const dialButton3 = document.getElementById("key3");
+dialButton3.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton3.value);
+}, false);
+
+const dialButton4 = document.getElementById("key4");
+dialButton4.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton4.value);
+}, false);
+
+const dialButton5 = document.getElementById("key5");
+dialButton5.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton5.value);
+}, false);
+
+const dialButton6 = document.getElementById("key6");
+dialButton6.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton6.value);
+}, false);
+
+const dialButton7 = document.getElementById("key7");
+dialButton7.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton7.value);
+}, false);
+
+const dialButton8 = document.getElementById("key8");
+dialButton8.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton8.value);
+}, false);
+
+const dialButton9 = document.getElementById("key9");
+dialButton9.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton9.value);
+}, false);
+
+const dialButton10 = document.getElementById("key*");
+dialButton10.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton10.value);
+}, false);
+
+const dialButton11 = document.getElementById("key0");
+dialButton11.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton11.value);
+}, false);
+
+const dialButton12 = document.getElementById("key#");
+dialButton12.addEventListener('click', function () {
+    makeTelephoneNumberKey(dialButton12.value);
+}, false);
+
+
 function play(event) {
     if (!audioCtx) {
         audioCtx = initAudio();
-        //testing();
         //makeDialTone();
         makeRingingTone();
+        //makeTelephoneNumberKey("1");
         //makeTibetanSingingBowl();
         return;
     }
@@ -66,6 +126,96 @@ function initSound() {
     return osc;
 }
 
+// makeTelephoneNumberKey(): plays the sound of a telephone key
+function makeTelephoneNumberKey(key) {
+    audioCtx = initAudio();
+
+    freq1 = [697, 770, 852, 941];
+    freq2 = [1209, 1336, 1477, 1633];
+
+    if (key == "*") { key = 10; }
+    else if (key == "0") { key = 11; }
+    else if (key == "#") { key = 12; }
+    else { key = parseInt(key); }
+
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0.125, audioCtx.currentTime);
+
+    const osc1 = audioCtx.createOscillator();
+    osc1.frequency.setValueAtTime(freq1[((key - 1) % 3)], audioCtx.currentTime);
+    osc1.type = "sine";
+    osc1.connect(gainNode).connect(audioCtx.destination);
+    osc1.start();
+
+    const osc2 = audioCtx.createOscillator();
+    osc2.frequency.setValueAtTime(freq2[Math.floor((key - 1) / 3)], audioCtx.currentTime);
+    osc2.type = "sine";
+    osc2.connect(gainNode).connect(audioCtx.destination);
+    osc2.start();
+
+    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+    gainNode.gain.setTargetAtTime(0, audioCtx.currentTime + 0.5, 0.01); // between 45ms and 3s
+}
+
+// waits specified number of miliseconds to continue running code
+// source: https://stackoverflow.com/questions/14226803/wait-5-seconds-before-executing-next-line?rq=1
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+// makeRingingTone(): plays the ringing tone sound
+async function makeRingingTone() {
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0.125, audioCtx.currentTime);
+
+    const osc1 = audioCtx.createOscillator();
+    osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc1.type = "sine";
+    osc1.connect(gainNode).connect(audioCtx.destination);
+    osc1.start();
+
+    const osc2 = audioCtx.createOscillator();
+    osc2.frequency.setValueAtTime(480, audioCtx.currentTime);
+    osc2.type = "sine";
+    osc2.connect(gainNode).connect(audioCtx.destination);
+    osc2.start();
+
+    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+
+    while (true) {
+        await delay(2 * 1000);
+        gainNode.gain.setTargetAtTime(0.1, audioCtx.currentTime, 0.01);
+        gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.01);
+        //audioCtx.suspend();
+        await delay(4 * 1000);
+        //audioCtx.resume();
+        gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+        gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+    }
+}
+
+// makeDialTone(): plays the dial tone sound
+// I first started with a dial tone to practice making the sound work
+function makeDialTone() {
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0.125, audioCtx.currentTime);
+
+    const osc1 = audioCtx.createOscillator();
+    osc1.frequency.setValueAtTime(350, audioCtx.currentTime);
+    osc1.type = "sine";
+    osc1.connect(gainNode).connect(audioCtx.destination);
+    osc1.start();
+
+    const osc2 = audioCtx.createOscillator();
+    osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc2.type = "sine";
+    osc2.connect(gainNode).connect(audioCtx.destination);
+    osc2.start();
+
+    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+}
+
 // makeTibetanSingingBowl(): plays the sound of a Tibetan singing bowl
 // I was playing around with the lowpass filter and lfo and accidentally made the sound of the meditation bowls
 function makeTibetanSingingBowl() {
@@ -91,125 +241,8 @@ function makeTibetanSingingBowl() {
     osc1.connect(lowpass).connect(audioCtx.destination);
 }
 
-const delay = ms => new Promise(res => setTimeout(res, ms));
-
-// makeRingingTone(): plays the ringing tone sound
-async function makeRingingTone() {
-    const osc1 = audioCtx.createOscillator();
-    osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
-    osc1.type = "sine";
-    const gainNode1 = audioCtx.createGain();
-    gainNode1.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc1.connect(gainNode1).connect(audioCtx.destination);
-    osc1.start();
-
-    const osc2 = audioCtx.createOscillator();
-    osc2.frequency.setValueAtTime(480, audioCtx.currentTime);
-    osc2.type = "sine";
-    const gainNode2 = audioCtx.createGain();
-    gainNode2.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc2.connect(gainNode2).connect(audioCtx.destination);
-    osc2.start();
-
-    gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-    gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-
-    gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
-    gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
-
-    startTime = audioCtx.currentTime;
-
-    // how to loop audio: https://mdn.github.io/webaudio-examples/decode-audio-data/
-
-    gainNode1.loop = true;
-
-    /*
-    while (true) {
-        await delay(2 * 1000);
-        audioCtx.suspend();
-        await delay(4 * 1000);
-        audioCtx.resume();
-    }*/
-}
-
-
 /*
-// makeRingingTone(): plays the ringing tone sound
-function makeRingingTone() {
-    const osc1 = audioCtx.createOscillator();
-    osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
-    osc1.type = "sine";
-    const gainNode1 = audioCtx.createGain();
-    gainNode1.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc1.connect(gainNode1).connect(audioCtx.destination);
-    osc1.start();
-
-    const osc2 = audioCtx.createOscillator();
-    osc2.frequency.setValueAtTime(480, audioCtx.currentTime);
-    osc2.type = "sine";
-    const gainNode2 = audioCtx.createGain();
-    gainNode2.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc2.connect(gainNode2).connect(audioCtx.destination);
-    osc2.start();
-
-    gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-    gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-
-    gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
-    gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
-
-    while (true) {
-
-        gainNode1.gain.setTargetAtTime(0.01, audioCtx.currentTime, 0.1);
-        gainNode2.gain.setTargetAtTime(0.01, audioCtx.currentTime, 0.1);
-
-        gainNode1.gain.setTargetAtTime(0.01, audioCtx.currentTime, 2 - 0.1);
-        gainNode2.gain.setTargetAtTime(0.01, audioCtx.currentTime, 2 - 0.1);
-
-        gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-        gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
-
-        gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
-        gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
-
-        gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 4 - (2 * 0.1));
-        gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 4 - (2 * 0.1));
-    }
-}
-*/
-
-// makeDialTone(): plays the dial tone sound
-// I first started with a dial tone to practice making the sound work
-function makeDialTone() {
-    const osc1 = audioCtx.createOscillator();
-    osc1.frequency.setValueAtTime(350, audioCtx.currentTime);
-    osc1.type = "sine";
-    const gainNode1 = audioCtx.createGain();
-    gainNode1.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc1.connect(gainNode1).connect(audioCtx.destination);
-    osc1.start();
-
-    gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
-    gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
-
-    const osc2 = audioCtx.createOscillator();
-    osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
-    osc2.type = "sine";
-    const gainNode2 = audioCtx.createGain();
-    gainNode2.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc2.connect(gainNode2).connect(audioCtx.destination);
-    osc2.start();
-
-    gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
-    gainNode2.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
-}
-
-
-
-
-
-
-/*
+// attempted, not working
 
 function cracklingFire() {
     biquad = initBiquad();
@@ -247,44 +280,5 @@ function makeWhiteNoise() {
     whiteNoise.loop = true;
     whiteNoise.start(0);
     return whiteNoise;
-}
-*/
-
-
-
-/*
-function playSoundEffect() {
-
-    key = "temp";
-    freq = 100;
-    lfoFreq = 2;
-    waveform = "sine";
-
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-
-    const osc = audioCtx.createOscillator();
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    osc.type = waveform;
-    osc.connect(gainNode).connect(audioCtx.destination);
-    osc.start();
-
-    activeGainNodes[key] = [gainNode];
-    activeOscillators[key] = [osc];
-
-    let lfo = audioCtx.createOscillator();
-    lfo.frequency.value = lfoFreq;
-    let lfoGain = audioCtx.createGain();
-    lfoGain.gain.value = 10;
-    lfo.connect(lfoGain).connect(osc.frequency);
-    lfo.start();
-    activeOscillators[key].push(lfo);
-
-    let gainNodes = Object.keys(activeGainNodes).length;
-    gainNode.gain.setTargetAtTime(0.7 / gainNodes, audioCtx.currentTime, 0.1);
-
-    Object.keys(activeGainNodes).forEach(function (gainNodeKey) {
-        activeGainNodes[gainNodeKey][0].gain.setTargetAtTime(0.4 / gainNodes, audioCtx.currentTime, 0.1);
-    });
 }
 */
