@@ -117,11 +117,11 @@ function makeRingingTone() {
 
     while (true) {
 
-        gainNode1.gain.setTargetAtTime(0.01, audioCtx.currentTime, 0.1);
-        gainNode2.gain.setTargetAtTime(0.01, audioCtx.currentTime, 0.1);
+        gainNode1.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+        gainNode2.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
 
-        gainNode1.gain.setTargetAtTime(0.01, audioCtx.currentTime, 2 - 0.1);
-        gainNode2.gain.setTargetAtTime(0.01, audioCtx.currentTime, 2 - 0.1);
+        gainNode1.gain.setTargetAtTime(0, audioCtx.currentTime, 2 - 0.1);
+        gainNode2.gain.setTargetAtTime(0, audioCtx.currentTime, 2 - 0.1);
 
         gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
         gainNode2.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
