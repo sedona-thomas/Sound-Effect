@@ -115,12 +115,12 @@ function bowl(event) {
     }
     else if (audioCtxBowl.state === 'suspended') {
         audioCtxBowl.resume();
-        gainNodeBowl.gain.setTargetAtTime(0.7, audioCtxBowl.currentTime, 0.5);
-        gainNodeBowl.gain.setTargetAtTime(0.4, audioCtxBowl.currentTime, 0.5);
+        gainNodeBowl.gain.setTargetAtTime(0.7, audioCtxBowl.currentTime, 0.2);
+        gainNodeBowl.gain.setTargetAtTime(0.4, audioCtxBowl.currentTime, 0.2);
     }
     else if (audioCtxBowl.state === 'running') {
-        gainNodeBowl.gain.setTargetAtTime(0, audioCtxBowl.currentTime, 0.5);
-        audioCtxBowl.suspend();
+        gainNodeBowl.gain.setTargetAtTime(0, audioCtxBowl.currentTime, 0.2);
+        audioCtxBowl.suspend(0.2);
     }
 }
 
@@ -240,8 +240,8 @@ function makeTibetanSingingBowl(audioCtx) {
     lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
     osc1.connect(lowpassFilter).connect(gainNode);
 
-    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
-    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
+    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.2);
+    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.2);
     gainNode.connect(audioCtx.destination);
     return gainNode;
 }
