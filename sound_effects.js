@@ -235,7 +235,7 @@ function makeTibetanSingingBowl(audioCtx) {
     lowpassFilter = audioCtx.createBiquadFilter();
     lowpassFilter.type = "lowpass";
     lowpassFilter.Q.value = 100;
-    lowpassFilter.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    lowpassFilter.frequency.setValueAtTime(300, audioCtx.currentTime);
     lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
 
     osc1.connect(lowpassFilter).connect(audioCtx.destination);
