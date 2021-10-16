@@ -11,6 +11,9 @@ playButton.addEventListener('click', play, false);
 const play2Button = document.getElementById("bowl");
 play2Button.addEventListener('click', play2, false);
 
+const play3Button = document.getElementById("dial");
+play3Button.addEventListener('click', play3, false);
+
 const dialButton1 = document.getElementById("key1");
 dialButton1.addEventListener('click', function () {
     makeTelephoneNumberKey(dialButton1.value);
@@ -86,23 +89,31 @@ function play(event) {
 }
 
 function play2(event) {
-    if (!audioCtx) {
-        audioCtx = initAudio();
+    if (!audioCtx2) {
+        audioCtx2 = initAudio();
         makeTibetanSingingBowl();
         return;
     }
-    else if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+    else if (audioCtx2.state === 'suspended') {
+        audioCtx2.resume();
     }
-    else if (audioCtx.state === 'running') {
-        audioCtx.suspend();
+    else if (audioCtx2.state === 'running') {
+        audioCtx2.suspend();
     }
 }
 
-function testing() {
-    lowpass = initLowpass(300);
-    sound = initSound();
-    sound.connect(lowpass).connect(audioCtx.destination);
+function play3(event) {
+    if (!audioCtx3) {
+        initAudio();
+        makeDialTone();
+        return;
+    }
+    else if (audioCtx3.state === 'suspended') {
+        audioCtx3.resume();
+    }
+    else if (audioCtx3.state === 'running') {
+        audioCtx3.suspend();
+    }
 }
 
 function initAudio() {
