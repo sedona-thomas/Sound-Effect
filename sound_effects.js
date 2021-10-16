@@ -8,6 +8,9 @@ var audioCtx;
 const playButton = document.getElementById("play");
 playButton.addEventListener('click', play, false);
 
+const play2Button = document.getElementById("bowl");
+play2Button.addEventListener('click', play2, false);
+
 const dialButton1 = document.getElementById("key1");
 dialButton1.addEventListener('click', function () {
     makeTelephoneNumberKey(dialButton1.value);
@@ -71,10 +74,21 @@ dialButton12.addEventListener('click', function () {
 function play(event) {
     if (!audioCtx) {
         audioCtx = initAudio();
-        //makeDialTone();
         makeRingingTone();
-        //makeTelephoneNumberKey("1");
-        //makeTibetanSingingBowl();
+        return;
+    }
+    else if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    else if (audioCtx.state === 'running') {
+        audioCtx.suspend();
+    }
+}
+
+function play2(event) {
+    if (!audioCtx) {
+        audioCtx = initAudio();
+        makeTibetanSingingBowl();
         return;
     }
     else if (audioCtx.state === 'suspended') {
