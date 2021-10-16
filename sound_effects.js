@@ -3,18 +3,18 @@
  * sound_effects.js: various sound effects
  */
 
-var audioCtx;
-var audioCtx2;
-var audioCtx3;
+var audioCtxRing;
+var audioCtxBowl;
+var audioCtxDial;
 
-const playButton = document.getElementById("play");
-playButton.addEventListener('click', play, false);
+const dialButton = document.getElementById("dial");
+dialButton.addEventListener('click', dial, false);
 
-const play2Button = document.getElementById("bowl");
-play2Button.addEventListener('click', play2, false);
+const ringButton = document.getElementById("ring");
+ringButton.addEventListener('click', ring, false);
 
-const play3Button = document.getElementById("dial");
-play3Button.addEventListener('click', play3, false);
+const bowlButton = document.getElementById("bowl");
+bowlButton.addEventListener('click', bowl, false);
 
 const dialButton1 = document.getElementById("key1");
 dialButton1.addEventListener('click', function () {
@@ -75,82 +75,50 @@ dialButton12.addEventListener('click', function () {
     makeTelephoneNumberKey(dialButton12.value);
 }, false);
 
-
-function play(event) {
-    if (!audioCtx) {
-        audioCtx = initAudio();
-        makeRingingTone();
+function dial(event) {
+    if (!audioCtxDial) {
+        audioCtxDial = initAudio();
+        makeDialTone(audioCtx);
         return;
     }
-    else if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+    else if (audioCtxDial.state === 'suspended') {
+        audioCtxDial.resume();
     }
-    else if (audioCtx.state === 'running') {
-        audioCtx.suspend();
+    else if (audioCtxDial.state === 'running') {
+        audioCtxDial.suspend();
     }
 }
 
-function play2(event) {
-    if (!audioCtx2) {
-        audioCtx2 = initAudio();
-        makeTibetanSingingBowl();
+function ring(event) {
+    if (!audioCtxRing) {
+        audioCtxRing = initAudio();
+        makeRingingTone(audioCtxRing);
         return;
     }
-    else if (audioCtx2.state === 'suspended') {
-        audioCtx2.resume();
+    else if (audioCtxRing.state === 'suspended') {
+        audioCtxRing.resume();
     }
-    else if (audioCtx2.state === 'running') {
-        audioCtx2.suspend();
+    else if (audioCtxRing.state === 'running') {
+        audioCtxRing.suspend();
     }
 }
 
-function play3(event) {
-    if (!audioCtx3) {
-        audioCtx3 = initAudio();
-        makeDialTone();
+function bowl(event) {
+    if (!audioCtxBowl) {
+        audioCtxBowl = initAudio();
+        makeTibetanSingingBowl(audioCtx);
         return;
     }
-    else if (audioCtx3.state === 'suspended') {
-        audioCtx3.resume();
+    else if (audioCtxBowl.state === 'suspended') {
+        audioCtxBowl.resume();
     }
-    else if (audioCtx3.state === 'running') {
-        audioCtx3.suspend();
+    else if (audioCtxBowl.state === 'running') {
+        audioCtxBowl.suspend();
     }
 }
 
 function initAudio() {
     return new (window.AudioContext || window.webkitAudioContext)();
-}
-
-function initLowpass(freq) {
-    lowpassFilter = audioCtx.createBiquadFilter();
-    lowpassFilter.type = "lowpass";
-    lowpassFilter.Q.value = 100;
-    lowpassFilter.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
-    return lowpassFilter;
-}
-
-function initSound() {
-    const osc = audioCtx.createOscillator();
-    osc.frequency.setValueAtTime(700, audioCtx.currentTime);
-    osc.type = "sine";
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc.connect(gainNode).connect(audioCtx.destination);
-    osc.start();
-
-    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
-    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
-
-    let lfo = audioCtx.createOscillator();
-    lfo.frequency.value = 20;
-    let lfoGain = audioCtx.createGain();
-    lfoGain.gain.value = 10;
-    lfo.connect(lfoGain).connect(osc.frequency);
-    lfo.start();
-
-    return osc;
 }
 
 // makeTelephoneNumberKey(): plays the sound of a telephone key
@@ -190,7 +158,7 @@ function makeTelephoneNumberKey(key) {
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 // makeRingingTone(): plays the ringing tone sound
-async function makeRingingTone() {
+async function makeRingingTone(audioCtx) {
     const gainNode = audioCtx.createGain();
     gainNode.gain.setValueAtTime(0.125, audioCtx.currentTime);
 
@@ -223,7 +191,7 @@ async function makeRingingTone() {
 
 // makeDialTone(): plays the dial tone sound
 // I first started with a dial tone to practice making the sound work
-function makeDialTone() {
+function makeDialTone(audioCtx) {
     const gainNode = audioCtx.createGain();
     gainNode.gain.setValueAtTime(0.125, audioCtx.currentTime);
 
@@ -245,7 +213,7 @@ function makeDialTone() {
 
 // makeTibetanSingingBowl(): plays the sound of a Tibetan singing bowl
 // I was playing around with the lowpass filter and lfo and accidentally made the sound of the meditation bowls
-function makeTibetanSingingBowl() {
+function makeTibetanSingingBowl(audioCtx) {
     const osc1 = audioCtx.createOscillator();
     osc1.frequency.setValueAtTime(650, audioCtx.currentTime);
     osc1.type = "sine";
@@ -266,6 +234,15 @@ function makeTibetanSingingBowl() {
 
     lowpass = initLowpass(300);
     osc1.connect(lowpass).connect(audioCtx.destination);
+}
+
+function initLowpass(freq) {
+    lowpassFilter = audioCtx.createBiquadFilter();
+    lowpassFilter.type = "lowpass";
+    lowpassFilter.Q.value = 100;
+    lowpassFilter.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+    return lowpassFilter;
 }
 
 /*
