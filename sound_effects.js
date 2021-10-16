@@ -106,7 +106,7 @@ function play2(event) {
 
 function play3(event) {
     if (!audioCtx3) {
-        initAudio();
+        audioCtx3 = initAudio();
         makeDialTone();
         return;
     }
