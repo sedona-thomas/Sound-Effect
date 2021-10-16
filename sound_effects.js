@@ -4,6 +4,8 @@
  */
 
 var audioCtx;
+var audioCtx2;
+var audioCtx3;
 
 const playButton = document.getElementById("play");
 playButton.addEventListener('click', play, false);
