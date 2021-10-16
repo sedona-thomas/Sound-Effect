@@ -5,6 +5,7 @@
 
 var audioCtxRing;
 var audioCtxBowl;
+var gainNodeBowl;
 var audioCtxDial;
 
 const dialButton = document.getElementById("dial");
@@ -106,13 +107,15 @@ function ring(event) {
 function bowl(event) {
     if (!audioCtxBowl) {
         audioCtxBowl = initAudio();
-        makeTibetanSingingBowl(audioCtxBowl);
+        gainNodeBowl = makeTibetanSingingBowl(audioCtxBowl);
         return;
     }
     else if (audioCtxBowl.state === 'suspended') {
         audioCtxBowl.resume();
+        gainNodeBowl.gain.setTargetAtTime(0.4, audioCtxBowl.currentTime, 0.5);
     }
     else if (audioCtxBowl.state === 'running') {
+        gainNodeBowl.gain.setTargetAtTime(0, audioCtxBowl.currentTime, 0.5);
         audioCtxBowl.suspend();
     }
 }
@@ -217,13 +220,13 @@ function makeTibetanSingingBowl(audioCtx) {
     const osc1 = audioCtx.createOscillator();
     osc1.frequency.setValueAtTime(650, audioCtx.currentTime);
     osc1.type = "sine";
-    const gainNode1 = audioCtx.createGain();
-    gainNode1.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc1.connect(gainNode1).connect(audioCtx.destination);
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    osc1.connect(gainNode).connect(audioCtx.destination);
     osc1.start();
 
-    gainNode1.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
-    gainNode1.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
+    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
+    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
 
     let lfo = audioCtx.createOscillator();
     lfo.frequency.value = 30;
@@ -239,6 +242,7 @@ function makeTibetanSingingBowl(audioCtx) {
     lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
 
     osc1.connect(lowpassFilter).connect(audioCtx.destination);
+    return gainNode;
 }
 
 /*
