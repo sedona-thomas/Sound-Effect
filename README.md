@@ -1,4 +1,4 @@
-# Sound-Effect
+# Sound Effects
 Recreating sounds in Web Audio
 
 ## Dial Tone, Ringing Telephone, Telephone Number Keys
