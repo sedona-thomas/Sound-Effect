@@ -78,7 +78,7 @@ dialButton12.addEventListener('click', function () {
 function dial(event) {
     if (!audioCtxDial) {
         audioCtxDial = initAudio();
-        makeDialTone(audioCtx);
+        makeDialTone(audioCtxDial);
         return;
     }
     else if (audioCtxDial.state === 'suspended') {
@@ -106,7 +106,7 @@ function ring(event) {
 function bowl(event) {
     if (!audioCtxBowl) {
         audioCtxBowl = initAudio();
-        makeTibetanSingingBowl(audioCtx);
+        makeTibetanSingingBowl(audioCtxBowl);
         return;
     }
     else if (audioCtxBowl.state === 'suspended') {
