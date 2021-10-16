@@ -232,17 +232,13 @@ function makeTibetanSingingBowl(audioCtx) {
     lfo.connect(lfoGain).connect(osc1.frequency);
     lfo.start();
 
-    lowpass = initLowpass(300);
-    osc1.connect(lowpass).connect(audioCtx.destination);
-}
-
-function initLowpass(freq) {
     lowpassFilter = audioCtx.createBiquadFilter();
     lowpassFilter.type = "lowpass";
     lowpassFilter.Q.value = 100;
     lowpassFilter.frequency.setValueAtTime(freq, audioCtx.currentTime);
     lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
-    return lowpassFilter;
+
+    osc1.connect(lowpassFilter).connect(audioCtx.destination);
 }
 
 /*
