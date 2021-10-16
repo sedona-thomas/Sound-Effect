@@ -115,6 +115,7 @@ function bowl(event) {
     }
     else if (audioCtxBowl.state === 'suspended') {
         audioCtxBowl.resume();
+        gainNodeBowl.gain.setTargetAtTime(0.7, audioCtxBowl.currentTime, 0.5);
         gainNodeBowl.gain.setTargetAtTime(0.4, audioCtxBowl.currentTime, 0.5);
     }
     else if (audioCtxBowl.state === 'running') {
@@ -216,16 +217,14 @@ function makeDialTone(audioCtx) {
 // makeTibetanSingingBowl(): plays the sound of a Tibetan singing bowl
 // I was playing around with the lowpass filter and lfo and accidentally made the sound of the meditation bowls
 function makeTibetanSingingBowl(audioCtx) {
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+
     const osc1 = audioCtx.createOscillator();
     osc1.frequency.setValueAtTime(650, audioCtx.currentTime);
     osc1.type = "sine";
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-    osc1.connect(gainNode).connect(audioCtx.destination);
+    osc1.connect(gainNode);
     osc1.start();
-
-    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
-    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
 
     let lfo = audioCtx.createOscillator();
     lfo.frequency.value = 30;
@@ -239,8 +238,11 @@ function makeTibetanSingingBowl(audioCtx) {
     lowpassFilter.Q.value = 100;
     lowpassFilter.frequency.setValueAtTime(300, audioCtx.currentTime);
     lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+    osc1.connect(lowpassFilter).connect(gainNode);
 
-    osc1.connect(lowpassFilter).connect(audioCtx.destination);
+    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.5);
+    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.5);
+    gainNode.connect(audioCtx.destination);
     return gainNode;
 }
 
