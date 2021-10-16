@@ -76,6 +76,7 @@ dialButton12.addEventListener('click', function () {
     makeTelephoneNumberKey(dialButton12.value);
 }, false);
 
+// dial(): controls a dial tone
 function dial(event) {
     if (!audioCtxDial) {
         audioCtxDial = initAudio();
@@ -90,6 +91,7 @@ function dial(event) {
     }
 }
 
+// ring(): controls a ringing telephone sound
 function ring(event) {
     if (!audioCtxRing) {
         audioCtxRing = initAudio();
@@ -104,6 +106,7 @@ function ring(event) {
     }
 }
 
+// bowl(): controls a Tibetan singing bowl sound
 function bowl(event) {
     if (!audioCtxBowl) {
         audioCtxBowl = initAudio();
@@ -120,6 +123,7 @@ function bowl(event) {
     }
 }
 
+// initAudio(): initialized audio context
 function initAudio() {
     return new (window.AudioContext || window.webkitAudioContext)();
 }
@@ -130,11 +134,6 @@ function makeTelephoneNumberKey(key) {
 
     freq1 = [697, 770, 852, 941];
     freq2 = [1209, 1336, 1477, 1633];
-
-    if (key == "*") { key = 10; }
-    else if (key == "0") { key = 11; }
-    else if (key == "#") { key = 12; }
-    else { key = parseInt(key); }
 
     const gainNode = audioCtx.createGain();
     gainNode.gain.setValueAtTime(0.125, audioCtx.currentTime);
