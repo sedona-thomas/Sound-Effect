@@ -85,7 +85,7 @@ dialButton12.addEventListener('click', function () {
 function dial(event) {
     if (!audioCtxDial) {
         audioCtxDial = initAudio();
-        makeDialTone(audioCtxDial);
+        gainNodeDial = makeDialTone(audioCtxDial);
         return;
     }
     else if (audioCtxDial.state === 'suspended') {
