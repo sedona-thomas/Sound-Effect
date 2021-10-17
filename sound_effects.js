@@ -4,9 +4,12 @@
  */
 
 var audioCtxRing;
+
 var audioCtxBowl;
 var gainNodeBowl;
+
 var audioCtxDial;
+var gainNodeDial;
 
 const dialButton = document.getElementById("dial");
 dialButton.addEventListener('click', dial, false);
@@ -87,9 +90,12 @@ function dial(event) {
     }
     else if (audioCtxDial.state === 'suspended') {
         audioCtxDial.resume();
+        gainNodeDial.gain.setTargetAtTime(0.7, audioCtxBowl.currentTime, 0.1);
+        gainNodeDial.gain.setTargetAtTime(0.4, audioCtxBowl.currentTime, 0.1);
     }
     else if (audioCtxDial.state === 'running') {
-        audioCtxDial.suspend();
+        gainNodeDial.gain.setTargetAtTime(0, audioCtxBowl.currentTime, 0.5);
+        audioCtxDial.suspend(0.5);
     }
 }
 
@@ -122,7 +128,7 @@ function bowl(event) {
     }
     else if (audioCtxBowl.state === 'running') {
         gainNodeBowl.gain.setTargetAtTime(0, audioCtxBowl.currentTime, 0.5);
-        audioCtxBowl.suspend(0.2);
+        audioCtxBowl.suspend(0.5);
     }
 }
 
@@ -214,6 +220,7 @@ function makeDialTone(audioCtx) {
 
     gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
     gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
+    return gainNode;
 }
 
 // makeTibetanSingingBowl(): plays the sound of a Tibetan singing bowl
