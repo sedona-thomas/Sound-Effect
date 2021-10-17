@@ -14,8 +14,10 @@ dialButton.addEventListener('click', dial, false);
 const ringButton = document.getElementById("ring");
 ringButton.addEventListener('click', ring, false);
 
+/*
 const bowlButton = document.getElementById("bowl");
 bowlButton.addEventListener('click', bowl, false);
+*/
 
 const dialButton1 = document.getElementById("key1");
 dialButton1.addEventListener('click', function () {
