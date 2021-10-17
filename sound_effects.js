@@ -115,11 +115,11 @@ function bowl(event) {
     }
     else if (audioCtxBowl.state === 'suspended') {
         audioCtxBowl.resume();
-        gainNodeBowl.gain.setTargetAtTime(0.7, audioCtxBowl.currentTime, 0.2);
-        gainNodeBowl.gain.setTargetAtTime(0.4, audioCtxBowl.currentTime, 0.2);
+        gainNodeBowl.gain.setTargetAtTime(0.7, audioCtxBowl.currentTime, 0.1);
+        gainNodeBowl.gain.setTargetAtTime(0.4, audioCtxBowl.currentTime, 0.1);
     }
     else if (audioCtxBowl.state === 'running') {
-        gainNodeBowl.gain.setTargetAtTime(0, audioCtxBowl.currentTime, 0.2);
+        gainNodeBowl.gain.setTargetAtTime(0, audioCtxBowl.currentTime, 0.5);
         audioCtxBowl.suspend(0.2);
     }
 }
@@ -219,11 +219,13 @@ function makeDialTone(audioCtx) {
 function makeTibetanSingingBowl(audioCtx) {
     const gainNode = audioCtx.createGain();
     gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    const gainNode2 = audioCtx.createGain();
+    gainNode2.gain.setValueAtTime(0.2, audioCtx.currentTime);
 
     const osc1 = audioCtx.createOscillator();
     osc1.frequency.setValueAtTime(650, audioCtx.currentTime);
     osc1.type = "sine";
-    osc1.connect(gainNode);
+    osc1.connect(gainNode2).connect(gainNode);
     osc1.start();
 
     let lfo = audioCtx.createOscillator();
@@ -237,11 +239,11 @@ function makeTibetanSingingBowl(audioCtx) {
     lowpassFilter.type = "lowpass";
     lowpassFilter.Q.value = 100;
     lowpassFilter.frequency.setValueAtTime(300, audioCtx.currentTime);
-    lowpassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+    lowpassFilter.gain.setValueAtTime(0.2, audioCtx.currentTime);
     osc1.connect(lowpassFilter).connect(gainNode);
 
-    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.2);
-    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.2);
+    gainNode.gain.setTargetAtTime(0.7, audioCtx.currentTime, 0.1);
+    gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 0.1);
     gainNode.connect(audioCtx.destination);
     return gainNode;
 }
