@@ -90,11 +90,11 @@ function dial(event) {
     }
     else if (audioCtxDial.state === 'suspended') {
         audioCtxDial.resume();
-        gainNodeDial.gain.setTargetAtTime(0.7, audioCtxBowl.currentTime, 0.1);
-        gainNodeDial.gain.setTargetAtTime(0.4, audioCtxBowl.currentTime, 0.1);
+        gainNodeDial.gain.setTargetAtTime(0.7, audioCtxDial.currentTime, 0.1);
+        gainNodeDial.gain.setTargetAtTime(0.4, audioCtxDial.currentTime, 0.1);
     }
     else if (audioCtxDial.state === 'running') {
-        gainNodeDial.gain.setTargetAtTime(0, audioCtxBowl.currentTime, 0.5);
+        gainNodeDial.gain.setTargetAtTime(0, audioCtxDial.currentTime, 0.5);
         audioCtxDial.suspend(0.5);
     }
 }
